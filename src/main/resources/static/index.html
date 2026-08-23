@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ShopFlow</title>
+    <style>
+        body{font-family:Arial;margin:0;background:#f5f5f5;color:#222}
+        header{background:#222;color:white;padding:18px 7%;display:flex;justify-content:space-between}
+        main{max-width:1100px;margin:30px auto;padding:0 20px}
+        .box{background:white;padding:25px;margin-bottom:20px;border-radius:8px}
+        input,button{padding:10px;margin:5px}
+        button{cursor:pointer}
+        .products{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+        .product{border:1px solid #ddd;padding:15px;border-radius:8px}
+        #message{padding:10px;font-weight:bold}
+    </style>
+</head>
+<body>
+<header><strong>ShopFlow</strong><span id="userStatus">Guest</span></header>
+<main>
+    <div class="box">
+        <h2>Login</h2>
+        <input id="email" placeholder="Email">
+        <input id="password" type="password" placeholder="Password">
+        <button id="loginButton" onclick="login()">Login</button>
+        <div id="message"></div>
+    </div>
+
+    <div class="box">
+        <h2>Products</h2>
+        <input id="search" placeholder="Search products">
+        <button id="searchButton" onclick="loadProducts()">Search</button>
+        <div id="products" class="products"></div>
+    </div>
+
+    <div class="box">
+        <h2>Quick Order</h2>
+        <input id="orderEmail" placeholder="Customer email">
+        <input id="amount" type="number" placeholder="Order amount">
+        <button id="placeOrderButton" onclick="placeOrder()">Place Order</button>
+        <div id="orderMessage"></div>
+    </div>
+</main>
+<script>
+async function login(){
+ const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({email:email.value,password:password.value})});
+ const d=await r.json(); message.textContent=d.message;
+ if(r.ok) userStatus.textContent=d.email;
+}
+async function loadProducts(){
+ const q=search.value.trim(); const r=await fetch('/api/products'+(q?'?keyword='+encodeURIComponent(q):''));
+ const data=await r.json(); products.innerHTML='';
+ data.forEach(p=>products.innerHTML+=`<div class="product"><h3>${p.name}</h3><p>${p.description}</p><b>₹${p.price}</b><p>Stock: ${p.stock}</p><button>Add to Cart</button></div>`);
+}
+async function placeOrder(){
+ const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({email:orderEmail.value,totalAmount:Number(amount.value)})});
+ const d=await r.json(); orderMessage.textContent=r.ok?`Order Created: ${d.orderNumber}`:JSON.stringify(d);
+}
+loadProducts();
+</script>
+</body>
+</html>
