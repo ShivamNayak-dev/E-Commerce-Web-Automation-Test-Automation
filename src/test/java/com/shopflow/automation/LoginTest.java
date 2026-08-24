@@ -68,13 +68,6 @@ public class LoginTest {
 
             loginButton.click();
 
-            WebElement message =
-                    wait.until(
-                            ExpectedConditions.visibilityOfElementLocated(
-                                    By.id("message")
-                            )
-                    );
-
             wait.until(
                     ExpectedConditions.textToBePresentInElementLocated(
                             By.id("message"),
@@ -82,16 +75,74 @@ public class LoginTest {
                     )
             );
 
-            String actualMessage = message.getText();
-
-            System.out.println(
-                    "Login message: " + actualMessage
-            );
+            WebElement message =
+                    driver.findElement(By.id("message"));
 
             Assert.assertEquals(
-                    actualMessage,
+                    message.getText(),
                     "Login successful",
                     "Login message is incorrect"
+            );
+
+        } finally {
+            driver.quit();
+        }
+    }
+
+    @Test
+    public void invalidLoginTest() {
+
+        WebDriver driver = new ChromeDriver();
+
+        try {
+            driver.get("http://localhost:8081");
+
+            WebDriverWait wait =
+                    new WebDriverWait(
+                            driver,
+                            Duration.ofSeconds(10)
+                    );
+
+            WebElement email =
+                    wait.until(
+                            ExpectedConditions.visibilityOfElementLocated(
+                                    By.id("email")
+                            )
+                    );
+
+            WebElement password =
+                    wait.until(
+                            ExpectedConditions.visibilityOfElementLocated(
+                                    By.id("password")
+                            )
+                    );
+
+            WebElement loginButton =
+                    wait.until(
+                            ExpectedConditions.elementToBeClickable(
+                                    By.id("loginButton")
+                            )
+                    );
+
+            email.sendKeys("wrong@example.com");
+            password.sendKeys("WrongPassword123");
+
+            loginButton.click();
+
+            wait.until(
+                    ExpectedConditions.textToBePresentInElementLocated(
+                            By.id("message"),
+                            "Invalid credentials"
+                    )
+            );
+
+            WebElement message =
+                    driver.findElement(By.id("message"));
+
+            Assert.assertEquals(
+                    message.getText(),
+                    "Invalid credentials",
+                    "Invalid login message is incorrect"
             );
 
         } finally {
