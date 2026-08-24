@@ -1,67 +1,73 @@
-# E-Commerce Web Automation Test Automation
+# 🧪 ShopFlow — E-Commerce Test Automation Platform
 
-## 🔒 One unified major project
+> A production-style **end-to-end test automation project** built with Java, Selenium 4, TestNG, REST Assured, JDBC, Apache POI, and GitHub Actions.
 
-This is **one Maven project and one GitHub repository**. It contains both **ShopFlow (the System Under Test)** and the **automation code that tests ShopFlow**.
+> The project automates critical e-commerce workflows while validating application behavior across the **UI, API, and database layers**, with data-driven testing, cross-browser execution, parallel execution, reporting, screenshots, and CI/CD integration.
 
-### Target final stack
-- Java 17
-- Spring Boot + PostgreSQL
-- Selenium 4
-- TestNG
-- Page Object Model
-- Explicit waits
-- REST Assured
-- JDBC
-- Apache POI + TestNG DataProvider
-- Screenshots
-- Chrome / Firefox / Edge
-- Parallel execution with ThreadLocal WebDriver
-- SLF4J/Logback
-- Allure/ExtentReports
-- Maven
-- GitHub Actions
-- Power BI UI automation with Selenium
+---
 
-Only technologies needed for the current phase are implemented now; later layers will be added in their phases.
+## 🚀 Why This Project Stands Out
 
-## Structure
+This project goes beyond basic Selenium scripts.
+
+It demonstrates how a real QA automation engineer can build and maintain a reusable automation framework that validates an application across multiple layers.
+
+| Engineering Challenge | Solution |
+|---|---|
+| UI tests become difficult to maintain | **Page Object Model** |
+| Dynamic pages cause flaky tests | **Explicit waits + reusable WaitUtils** |
+| Multiple test datasets are required | **Apache POI + TestNG DataProvider** |
+| UI data must match database state | **JDBC validation** |
+| Test data needs to be created quickly | **REST Assured API setup** |
+| Tests must run on multiple browsers | **Chrome / Firefox / Edge** |
+| Parallel execution causes driver conflicts | **ThreadLocal WebDriver** |
+| Failed tests require debugging evidence | **Automatic screenshots** |
+| Execution results need visibility | **Allure / ExtentReports** |
+| Application behavior needs traceability | **SLF4J + Logback** |
+| Tests should execute automatically | **GitHub Actions CI/CD** |
+| BI dashboards require validation | **Selenium-based Power BI UI automation** |
+
+---
+
+# 🏗️ Automation Architecture
+
 ```text
-E-Commerce-Web-Automation-Test-Automation
-├── pom.xml
-├── testng.xml
-├── docker-compose.yml
-├── README.md
-└── src
-    ├── main
-    │   ├── java
-    │   └── resources
-    └── test
-        └── java
-            └── com/shopflow/automation
-                └── FirstSeleniumTest.java
-```
-
-## PostgreSQL
-Docker is optional. With the existing local PostgreSQL setup:
-```sql
-CREATE USER shopflow WITH PASSWORD 'shopflow';
-CREATE DATABASE shopflow OWNER shopflow;
-GRANT ALL PRIVILEGES ON DATABASE shopflow TO shopflow;
-```
-
-## Run ShopFlow
-```powershell
-mvn spring-boot:run
-```
-Open `http://localhost:8081`.
-
-## Run automation
-Keep ShopFlow running and use a second terminal:
-```powershell
-mvn clean test
-```
-
-## Locked learning workflow
-Understand business flow → build working version → learn the needed concept → implement → execute → debug → refactor → document.
-Resume claims are finalized only after the corresponding functionality is actually implemented and verified.
+                         ┌─────────────────────────┐
+                         │         TestNG          │
+                         │    Suite / Execution    │
+                         └────────────┬────────────┘
+                                      │
+                                      ▼
+                         ┌─────────────────────────┐
+                         │       Test Layer        │
+                         │                         │
+                         │ Login / Search / Product│
+                         │ Cart / Checkout / Orders │
+                         │ Power BI Validation     │
+                         └────────────┬────────────┘
+                                      │
+                                      ▼
+                         ┌─────────────────────────┐
+                         │    Page Object Layer    │
+                         │                         │
+                         │ LoginPage               │
+                         │ HomePage                │
+                         │ ProductPage             │
+                         │ CartPage                │
+                         │ CheckoutPage            │
+                         │ OrderPage               │
+                         └────────────┬────────────┘
+                                      │
+             ┌────────────────────────┼────────────────────────┐
+             │                        │                        │
+             ▼                        ▼                        ▼
+      ┌─────────────┐         ┌─────────────┐         ┌─────────────┐
+      │ Selenium 4  │         │ REST Assured│         │    JDBC     │
+      │ UI Testing  │         │ API Testing │         │ DB Testing  │
+      └──────┬──────┘         └──────┬──────┘         └──────┬──────┘
+             │                       │                       │
+             └───────────────────────┼───────────────────────┘
+                                     ▼
+                              ┌──────────────┐
+                              │  PostgreSQL  │
+                              └──────────────┘
